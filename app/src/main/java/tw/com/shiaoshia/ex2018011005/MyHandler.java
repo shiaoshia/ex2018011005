@@ -24,6 +24,7 @@ public class MyHandler extends DefaultHandler {
     //ArrayList<String> titles = new ArrayList<>();
     //ArrayList<String> links = new ArrayList<>();
     StringBuilder linkSB = new StringBuilder();
+    StringBuilder descSB = new StringBuilder();
     //將資料放在Mobile01NewsItem的ArrayList裡;newsItems.title、newsItems.item
     public ArrayList<Mobile01NewsItem> newsItems = new ArrayList<>();
     Mobile01NewsItem item;
@@ -68,6 +69,23 @@ public class MyHandler extends DefaultHandler {
                 break;
             case "description":
                 isDescription = false;
+                if (isItem) {
+
+                    String str = descSB.toString();
+                    //取出img的位址
+                    Pattern pattern = Pattern.compile("https.*jpg");
+                    Matcher m = pattern.matcher(str);
+                    String imgurl = "";
+                    if (m.find()) {
+                        imgurl = m.group(0);
+                    }
+                    str = str.replaceAll("<img.*/>","");    //利用正規表示式將<img />拿掉
+                    Log.d("NET", str); //秀出Description
+                    item.description = str;
+                    Log.d("NET", imgurl); //秀出images
+                    item.imgurl = imgurl;
+                    descSB = new StringBuilder(); //清空descSB
+                }
                 break;
         }
         super.endElement(uri, localName, qName);
@@ -123,21 +141,7 @@ public class MyHandler extends DefaultHandler {
             linkSB.append(new String(ch,start,length)); //將link字串組合起來
         }
         if(isDescription && isItem) {
-
-            String str = new String(ch,start,length);
-
-            //取出img的位址
-            Pattern pattern = Pattern.compile("https.*jpg");
-            Matcher m = pattern.matcher(str);
-            String imgurl = "";
-            if (m.find()) {
-                imgurl = m.group(0);
-            }
-            str = str.replaceAll("<img.*/>","");    //利用正規表示式將<img />拿掉
-            Log.d("NET", str); //秀出Description
-            item.description = str;
-            Log.d("NET", imgurl); //秀出images
-            item.imgurl = imgurl;
+            descSB.append(new String(ch,start,length));
         }
     }
 }
