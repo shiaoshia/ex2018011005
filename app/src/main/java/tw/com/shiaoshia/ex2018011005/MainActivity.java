@@ -43,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent it = new Intent(MainActivity.this,DetailActivity.class);
-                it.putExtra("link",dataHandler.links.get(i));
+                //it.putExtra("link",dataHandler.links.get(i));
+                it.putExtra("link",dataHandler.newsItems.get(i).link);
                 startActivity(it);
             }
         });
@@ -97,8 +98,14 @@ public class MainActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    String data[] = new String[dataHandler.newsItems.size()];
+                                    for (int i=0;i<data.length;i++) {
+                                        data[i] = dataHandler.newsItems.get(i).title;
+                                    }
+//                                    adapter = new ArrayAdapter<String>(MainActivity.this,
+//                                            android.R.layout.simple_list_item_1,dataHandler.titles);
                                     adapter = new ArrayAdapter<String>(MainActivity.this,
-                                            android.R.layout.simple_list_item_1,dataHandler.titles);
+                                            android.R.layout.simple_list_item_1,data);
                                     listView.setAdapter(adapter);
                                 }
                             });

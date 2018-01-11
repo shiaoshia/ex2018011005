@@ -17,19 +17,21 @@ public class MyHandler extends DefaultHandler {
     boolean isItem = false; //取出Item資料
     boolean isTitle = false; //取出Title資料
     boolean isLink = false; //取出連結位址
-    ArrayList<String> titles = new ArrayList<>();
-    ArrayList<String> links = new ArrayList<>();
+    //ArrayList<String> titles = new ArrayList<>();
+    //ArrayList<String> links = new ArrayList<>();
     StringBuilder linkSB = new StringBuilder();
-
+    public ArrayList<Mobile01NewsItem> newsItems = new ArrayList<>();
+    Mobile01NewsItem item;
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
         //Log.d("NET",qName);
-        if (qName.equals("item")) {
-            isItem = true;     //遇到<item>開
-        }
         if (qName.equals("title")) {
             isTitle = true;   //遇到<title>開關開
+        }
+        if (qName.equals("item")) {
+            isItem = true;     //遇到<item>開
+            item = new Mobile01NewsItem();
         }
         if (qName.equals("link")) {
             isLink = true;
@@ -41,17 +43,19 @@ public class MyHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         super.endElement(uri, localName, qName);
-        if (qName.equals("item")) {
-            isItem = false;
-        }
         if (qName.equals("title")) {
             isTitle = false;    //遇到<title>開關關
+        }
+        if (qName.equals("item")) {
+            isItem = false;
+            newsItems.add(item);
         }
         if (qName.equals("link")) {
             isLink =false;
             if (isItem) {
                 Log.d("NET", linkSB.toString());  //將連結秀出來
-                links.add(linkSB.toString());
+                //links.add(linkSB.toString());
+                item.link = linkSB.toString();
                 linkSB = new StringBuilder();   //清空linkSB
             }
         }
@@ -64,7 +68,8 @@ public class MyHandler extends DefaultHandler {
         super.characters(ch, start, length);
         if(isTitle && isItem) {
             Log.d("NET", new String(ch,start,length));  //將文字秀出來
-            titles.add(new String(ch,start,length));
+            //titles.add(new String(ch,start,length));
+            item.title = new String(ch,start,length);
         }
         if(isLink && isItem) {
             linkSB.append(new String(ch,start,length)); //將link字串組合起來
