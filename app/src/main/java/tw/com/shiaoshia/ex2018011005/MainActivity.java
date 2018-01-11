@@ -1,11 +1,13 @@
 package tw.com.shiaoshia.ex2018011005;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -31,12 +33,20 @@ public class MainActivity extends AppCompatActivity {
 
     ListView listView;
     ArrayAdapter<String> adapter;
+    MyHandler dataHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         listView = (ListView)findViewById(R.id.listVIew);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent it = new Intent(MainActivity.this,DetailActivity.class);
+                it.putExtra("link",dataHandler.links.get(i));
+                startActivity(it);
+            }
+        });
     }
 
     @Override
@@ -72,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                             String str1 = sb.toString();
                             Log.d("NET", str1); //印出所有內容
-                            final MyHandler dataHandler = new MyHandler();
+                            dataHandler = new MyHandler();
                             SAXParserFactory spf = SAXParserFactory.newInstance();
                             SAXParser sp = spf.newSAXParser();
                             XMLReader xr = sp.getXMLReader();
@@ -88,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     adapter = new ArrayAdapter<String>(MainActivity.this,
-                                            android.R.layout.simple_list_item_1,dataHandler.title);
+                                            android.R.layout.simple_list_item_1,dataHandler.titles);
                                     listView.setAdapter(adapter);
                                 }
                             });
