@@ -32,7 +32,8 @@ import javax.xml.parsers.SAXParserFactory;
 public class MainActivity extends AppCompatActivity {
 
     ListView listView;
-    ArrayAdapter<String> adapter;
+    //ArrayAdapter<String> adapter; //改成用MyAdapter
+    MyAdapter adapter;
     MyHandler dataHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,8 +105,11 @@ public class MainActivity extends AppCompatActivity {
                                     }
 //                                    adapter = new ArrayAdapter<String>(MainActivity.this,
 //                                            android.R.layout.simple_list_item_1,dataHandler.titles);
-                                    adapter = new ArrayAdapter<String>(MainActivity.this,
-                                            android.R.layout.simple_list_item_1,data);
+//                                    adapter = new ArrayAdapter<String>(MainActivity.this,
+//                                            android.R.layout.simple_list_item_1,data);
+                                    adapter = new MyAdapter(MainActivity.this,
+                                            dataHandler.newsItems);
+                                    listView.setAdapter(adapter);
                                     listView.setAdapter(adapter);
                                 }
                             });

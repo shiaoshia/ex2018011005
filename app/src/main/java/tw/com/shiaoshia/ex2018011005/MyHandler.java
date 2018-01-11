@@ -1,12 +1,15 @@
 package tw.com.shiaoshia.ex2018011005;
 
 import android.util.Log;
+import android.util.Patterns;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by USER-NB on 2018/1/10.
@@ -120,7 +123,21 @@ public class MyHandler extends DefaultHandler {
             linkSB.append(new String(ch,start,length)); //將link字串組合起來
         }
         if(isDescription && isItem) {
-            item.description = new String(ch,start,length);
+
+            String str = new String(ch,start,length);
+
+            //取出img的位址
+            Pattern pattern = Pattern.compile("https.*jpg");
+            Matcher m = pattern.matcher(str);
+            String imgurl = "";
+            if (m.find()) {
+                imgurl = m.group(0);
+            }
+            str = str.replaceAll("<img.*/>","");    //利用正規表示式將<img />拿掉
+            Log.d("NET", str); //秀出Description
+            item.description = str;
+            Log.d("NET", imgurl); //秀出images
+            item.imgurl = imgurl;
         }
     }
 }
